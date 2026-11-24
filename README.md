@@ -106,3 +106,15 @@ python plot_predictions.py
 Copilot 작업 요청은 시간별 학습 자료 생성, 시간순 학습·12월 평가, 세 예측 방법 비교, 첫 주 그래프 생성이었습니다. 직접 실행해 16,720개 학습행과 744개 평가행, 12월 MAE, `random_state=42` 반복 실행 시 동일한 예측 파일을 확인했습니다. 그래프는 12월 1~7일 168개 평가행을 표시하며, MAE는 12월 전체 744행으로 계산합니다.
 
 ![2024년 12월 첫 주 실제 풍속과 예측 비교](prediction_week.png)
+
+## 강풍 분류 실습 (2023-2024)
+
+`wind_classification_practice` 폴더는 다음 1시간 풍속이 4.0 m/s 이상인지 분류합니다. 입력 데이터는 앞의 풍속 실험에서 생성한 `wind_dataset.csv`를 이 폴더에 복사해 준비합니다. 시간은 KST이며, 정답 시각 기준 2023년 1월부터 2024년 11월까지를 학습에, 2024년 12월 1~31일을 평가에 사용합니다. 입력 특성은 현재 풍속·기온·습도와 1·2시간 전 풍속입니다. 표준화기는 학습행에만 적합하며, 기본 클래스 가중치를 사용하지 않는 로지스틱 회귀의 강풍 확률을 0.50 및 0.20 임계값으로 각각 분류합니다.
+
+```powershell
+Copy-Item .\wind_dataset.csv .\wind_classification_practice\wind_dataset.csv
+python .\wind_classification_practice\classify_wind.py
+python .\wind_classification_practice\plot_strong_wind_december.py
+```
+
+`classify_wind.py`는 12월 평가행별 예측을 `classification_predictions.csv`에, 항상 0·현재 풍속 4.0 m/s 기준·로지스틱 회귀의 평가 지표를 `classification_scores.csv`에 저장합니다. `plot_strong_wind_december.py`는 12월 1~7일의 실제 풍속과 세 강풍 분류를 정답 시각 기준으로 그려 `strong_wind_december.png`를 생성합니다. 이 CSV와 PNG는 실행 시 생성되는 결과물입니다.
